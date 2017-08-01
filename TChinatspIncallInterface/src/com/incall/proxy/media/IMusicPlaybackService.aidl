@@ -1,0 +1,40 @@
+package   com.incall.proxy.media;
+import com.incall.proxy.binder.callback.IMediaStatusCallBack;
+import android.graphics.Bitmap;
+interface IMusicPlaybackService
+{
+    long 	duration();
+	void 	fastForward();
+	void 	fastRewind();
+	long 	getAudioId();
+	String 	getID3Album(String path);
+	String 	getID3Artist(String path);
+	Bitmap 	getID3ArtWork(String path, int width, int height);
+	String 	getID3Title(String path);
+	long 	getIdByPath(String path);       
+	int 	getListLength();
+	int 	getListPosition();
+	String 	getPathById(int id);
+	int 	getPlayMode();
+	String 	getPlayPath();          
+	int 	getPlayState();
+	String 	getTrackInfo();
+	boolean isPlaying();
+	void 	next();
+	void 	pause();
+	void 	play();
+	void 	playById(int id);
+	void 	playByPath(String path);
+	boolean	playListPosition(int position) ;          
+	boolean playRemembrance();
+	long 	position();
+	void 	prev();
+	void 	release();
+	long 	seek(long pos);
+	void 	setAndPlayList(in long[] list, int position);
+	void 	setPlayMode(int mode);
+	void 	stop(); 
+	void setOnMediaCallBack(IMediaStatusCallBack callback);
+	String[] 	getCurrentPlayList() ;
+	void 	playOnceById(int id) ;
+}
