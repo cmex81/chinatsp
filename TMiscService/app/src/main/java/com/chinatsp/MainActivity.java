@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.view.View;
 import android.widget.TextView;
 
 import com.chinatsp.misc.MiscService;
@@ -15,13 +16,14 @@ import com.chinatsp.misc.MiscServiceAdapter;
 import com.incall.proxy.binder.callback.IStorageCallBackInterface;
 
 
+
 /**
  * Created by ryan on 31/07/2017.
- * this class by personal test
+ * this class by test
  */
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements View.OnClickListener {
     private MiscServiceAdapter mBinder;
-    private TextView usbT,sdT;
+    private TextView usbT,sdT,usbBt,sdBt;
     private StorageDeviceCallback registerCallBack;
 
     @Override
@@ -30,10 +32,14 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
         usbT = (TextView) findViewById(R.id.usb_tv);
         sdT = (TextView) findViewById(R.id.sd_tv);
+        sdBt = (TextView) findViewById(R.id.sd_bt);
+        usbBt = (TextView) findViewById(R.id.usb_bt);
         registerCallBack = new StorageDeviceCallback();
         Intent intent = new Intent(this, MiscService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
+        usbBt.setOnClickListener(this);
+        sdBt.setOnClickListener(this);
     }
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -59,6 +65,26 @@ public class MainActivity extends Activity{
         }
     };
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.sd_bt:
+                try {
+                    sdBt.setText("SD is exist ="+ mBinder.isSdcardExist());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.usb_bt:
+                try {
+                    usbBt.setText("USB is exist ="+ mBinder.isUsbExist());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
+
     private class StorageDeviceCallback implements IStorageCallBackInterface {
 
         @Override
@@ -82,4 +108,9 @@ public class MainActivity extends Activity{
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mConnection);
+    }
 }
