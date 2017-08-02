@@ -16,18 +16,14 @@ import com.incall.proxy.binder.service.ITboxInterface;
 /**
  * Created by ryan on 31/07/2017.
  */
-public class MiscServiceAdapter extends Binder implements IStorageInterface, ITboxInterface {
-
+public class MiscServiceAdapter extends Binder implements IStorageInterface, ITboxInterface,IServiceInterface{
 
     private final String TAG = "MiscServiceAdapter";
-    private StorageService storageService;
-    private TboxService tboxService;
     private Context mContext;
     public MiscServiceAdapter(Context context) {
         MjLog.d(TAG,"MiscServiceAdapter=====");
         this.mContext = context;
-        storageService = new StorageService(mContext);
-        tboxService = new TboxService();
+        initService(mContext);
     }
 
     //===============ITboxInterface=====================
@@ -132,26 +128,39 @@ public class MiscServiceAdapter extends Binder implements IStorageInterface, ITb
     @Override
     public void registerCallBack(IStorageCallBackInterface iStorageCallBackInterface) throws RemoteException {
         MjLog.d(TAG,"registerCallBack=====");
-        storageService.registerCallBack(iStorageCallBackInterface);
+        StorageService.getInstance().registerCallBack(iStorageCallBackInterface);
     }
 
     @Override
     public void unregisterCallBack(IStorageCallBackInterface iStorageCallBackInterface) throws RemoteException {
-        storageService.unregisterCallBack(iStorageCallBackInterface);
+        StorageService.getInstance().unregisterCallBack(iStorageCallBackInterface);
     }
 
     @Override
     public boolean isUsbExist() throws RemoteException {
-        return storageService.isUsbExist();
+        return StorageService.getInstance().isUsbExist();
     }
 
     @Override
     public boolean isUsbExtExist() throws RemoteException {
-        return storageService.isUsbExist();
+        return StorageService.getInstance().isUsbExist();
     }
 
     @Override
     public boolean isSdcardExist() throws RemoteException {
-        return storageService.isSdcardExist();
+        return StorageService.getInstance().isSdcardExist();
+    }
+
+
+    @Override
+    public void initService(Context context) {
+        StorageService.getInstance().initService(context.getApplicationContext());
+        TboxService.getInstance().initService(context.getApplicationContext());
+    }
+
+    @Override
+    public void onDestroy() {
+        StorageService.getInstance().onDestroy();
+        TboxService.getInstance().onDestroy();
     }
 }

@@ -1,24 +1,34 @@
 package com.chinatsp.tbox;
 
+import android.content.Context;
 import android.os.RemoteException;
 
+import com.chinatsp.misc.IServiceInterface;
 import com.incall.proxy.binder.callback.ITboxCallBackInterface;
 import com.incall.proxy.binder.service.ITboxInterface;
 
 /**
  * Created by ryan on 31/07/2017.
  */
-public class TboxService extends ITboxInterface.Stub{
+public class TboxService extends ITboxInterface.Stub implements IServiceInterface {
 
     public TboxService() {
 
     }
-//    public static TboxService getInstance(){
-//        return TboxServiceSingletonHolder.sInstance;
-//    }
-//    private static class TboxServiceSingletonHolder{
-//        private static final TboxService sInstance = new TboxService();
-//    }
+    public static TboxService getInstance(){
+        return TboxServiceSingletonHolder.sInstance;
+    }
+    private static class TboxServiceSingletonHolder{
+        private static final TboxService sInstance = new TboxService();
+    }
+    public void initService(Context context){
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
 
     @Override
     public void registerCallBack(ITboxCallBackInterface iTboxCallBackInterface) throws RemoteException {

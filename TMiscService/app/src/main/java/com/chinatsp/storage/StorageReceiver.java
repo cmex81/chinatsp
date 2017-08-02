@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+
+import com.incall.log.MjLog;
 
 /**
  * Created by ryan on 28/07/2017.
@@ -26,6 +29,14 @@ public class StorageReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive = " + intent.getAction());
+        //显示当前系统插入USB设备
+        UsbManager mUsbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            MjLog.d(TAG, "getDeviceList().size() = "+mUsbManager.getDeviceList().size());
+            for (UsbDevice device : mUsbManager.getDeviceList().values()) {
+                MjLog.d(TAG, "USB Device: " + device.toString());
+            }
+        }
         if (storageReceiveCallback==null)return;
         switch (intent.getAction()) {
             case ACTION_USB_STATE:
